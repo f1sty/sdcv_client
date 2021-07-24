@@ -17,7 +17,7 @@ defmodule Sdcv do
     definitions
     |> String.split("-->")
     |> tl()
-    |> Enum.chunk_every(2)
+    |> Enum.chunk_every(2, 2, :discard)
     |> Enum.into(%{}, fn [k, v] -> {String.trim(k), v} end)
   end
 end
