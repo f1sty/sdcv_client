@@ -8,7 +8,7 @@ defmodule Sdcv.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {Sdcv.SdcvServer, "sdcv"}
+      {Sdcv.SdcvServer, "sdcv -e"}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -4,12 +4,12 @@ defmodule Sdcv.SdcvServer do
   use GenServer
   require Logger
 
-  def start_link(args \\ %{}) do
+  def start_link(args \\ "sdcv -e") do
     GenServer.start_link(__MODULE__, args, name: __MODULE__)
   end
 
-  def init(_args) do
-    port = Port.open({:spawn, "sdcv -e"}, [:binary])
+  def init(cmd) do
+    port = Port.open({:spawn, cmd}, [:binary])
     cache = :ets.new(:cache, [:public])
     {:ok, %{cache: cache, port: port}}
   end
