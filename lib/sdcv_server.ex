@@ -11,6 +11,7 @@ defmodule Sdcv.SdcvServer do
   def init(cmd) do
     port = Port.open({:spawn, cmd}, [:binary])
     cache = :ets.new(:cache, [:public])
+
     {:ok, %{cache: cache, port: port}}
   end
 

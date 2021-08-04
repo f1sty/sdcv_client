@@ -1,5 +1,6 @@
 defmodule Sdcv do
   @moduledoc false
+
   require Logger
 
   def search(port, word) do
