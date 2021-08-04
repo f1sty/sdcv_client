@@ -9,21 +9,22 @@ defmodule Sdcv.SdcvServer do
   end
 
   def init(_args) do
+    port = Port.open({:spawn, "sdcv -e"}, [:binary])
     cache = :ets.new(:cache, [:public])
-    {:ok, %{cache: cache}}
+    {:ok, %{cache: cache, port: port}}
   end
 
   def search(word) do
     GenServer.call(__MODULE__, {:search, word})
   end
 
-  def handle_call({:search, word}, _from, %{cache: cache} = state) do
+  def handle_call({:search, word}, _from, %{cache: cache, port: port} = state) do
     response =
       case :ets.lookup(cache, word) do
         [] ->
-          case Sdcv.search(word) do
-            nil ->
-              "no definition"
+          case Sdcv.search(port, word) do
+            definition when definition == %{} ->
+              nil
 
             definition ->
               :ets.insert(cache, {word, definition})
@@ -31,7 +32,6 @@ defmodule Sdcv.SdcvServer do
           end
 
         [{^word, definition}] ->
-          Logger.info("hit cache with word '#{word}'")
           definition
       end
 
